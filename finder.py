@@ -46,7 +46,7 @@ class Finder:
                         self.checker_default(catalog_name, find_str, name)
                     elif name.split('.')[-1] in Finder.FILES_NAMES[1]:
                         self.checker_other(catalog_name, find_str, name)
-                if self.feeling == True:
+                if self.feeling:
                     print("The text was not found. ;(")
             except FileNotFoundError:
                 print('\nError! You entered an invalid file path.')
