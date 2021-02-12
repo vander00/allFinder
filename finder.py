@@ -5,7 +5,8 @@ from fuzzywuzzy import fuzz
 
 class Finder:
     # --- Data ---
-    FILES_NAMES = [["txt", 'log', 'html', 'css', 'cpp', 'h', 'js', 'py', 'c'], ['doc', 'docx', 'rtf', 'odt']]  # Supported file formats
+    DEFAULT_NAMES_FILES = ["txt", 'log', 'html', 'css', 'cpp', 'h', 'js', 'py', 'c']  # Supported file formats
+    OTHER_NAMES_FILES = ['doc', 'docx', 'rtf', 'odt']  
 
     def __init__(self):
             self.feeling = True  # Check if text is found
@@ -30,9 +31,12 @@ class Finder:
                 print(f"String repetitions: {numbers_repeat}")
 
     def checker_other(self, catalog_name, find_str, name_file):  # Checking files from the FILES_NAMES list
-        if find_str in textract.process(catalog_name + "/" + name_file).decode('utf-8').lower():
-            self.feeling = False
-            print(f"Path to the file: {catalog_name + '/' + name_file}")
+        try:  # File validation check
+            if find_str in textract.process(catalog_name + "/" + name_file).decode('utf-8').lower():
+                self.feeling = False
+                print(f"Path to the file: {catalog_name + '/' + name_file}")
+        except KeyError:
+            pass
 
     def run(self):  # Main function
         while True:
@@ -42,9 +46,9 @@ class Finder:
             try:
                 catalog = os.listdir(catalog_name)
                 for name in catalog:
-                    if name.split('.')[-1] in Finder.FILES_NAMES[0]:
+                    if name.split('.')[-1] in Finder.DEFAULT_NAMES_FILES:
                         self.checker_default(catalog_name, find_str, name)
-                    elif name.split('.')[-1] in Finder.FILES_NAMES[1]:
+                    elif name.split('.')[-1] in Finder.OTHER_NAMES_FILES:
                         self.checker_other(catalog_name, find_str, name)
                 if self.feeling:
                     print("The text was not found. ;(")
