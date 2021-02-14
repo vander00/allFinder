@@ -8,7 +8,7 @@ from colorama import Fore
 class Finder:
     # --- Data ---
     DEFAULT_NAMES_FILES = ["txt", 'log', 'html', 'css', 'cpp', 'h', 'js', 'py', 'c']  # Supported file formats
-    OTHER_NAMES_FILES = ['doc', 'docx', 'rtf', 'odt']
+    OTHER_NAMES_FILES = ['doc', 'docx', 'odt']
 
     def __init__(self):
             self.feeling = True  # Check if text is found
@@ -44,13 +44,26 @@ class Finder:
             if numbers_repeat != 0:
                 print(f"\nPath to the file: {catalog_name + '/' + name_file}.")
                 print(f'Content lines: {str(numbers_str).replace(",", " |")}')
-                print(f"String repetitions: {numbers_repeat}")
+                print(f"String repetitions: {numbers_repeat}\n")
 
     def checker_other(self, catalog_name, find_str, name_file):  # Checking files from the FILES_NAMES list
+        # ---Data---
+        numbers_str = list()  # Lines with text
+        number_str = 1  # The line where the text was found
+        numbers_repeat = 0  # Repeating text in a file
         try:  # File validation check
-            if find_str in textract.process(catalog_name + "/" + name_file).decode('utf-8').lower():
-                self.feeling = False
-                print(f"Path to the file: {catalog_name + '/' + name_file}")
+            f = textract.process(catalog_name + "/" + name_file).decode('utf-8').lower().split('\n')
+            for line in f:
+                if fuzz.partial_ratio(find_str, line) > 88:  # If the lines match more than 89, then the information is displayed
+                    numbers_repeat += 1
+                    numbers_str.append(number_str)
+                    number_str = 0
+                    self.feeling = False
+                number_str += 1
+            if numbers_repeat != 0:
+                print(f"\nPath to the file: {catalog_name + '/' + name_file}.")
+                print(f'Content lines: {str(numbers_str).replace(",", " |")}')
+                print(f"String repetitions: {numbers_repeat}\n")
         except KeyError:
             pass
         except Exception:
