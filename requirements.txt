@@ -1,0 +1,3 @@
+textract ==1.6.3
+fuzzywuzzy==0.18.0
+colorama==0.4.4
