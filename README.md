@@ -13,5 +13,4 @@
 #### Special formats
 - doc
 - docx
-- rtf
 - otd
