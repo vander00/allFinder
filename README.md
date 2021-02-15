@@ -22,7 +22,7 @@
 ### Installation
 
 ```
-pip install finder-in-files==0.1.0
+Poka net
 ```
 
 ### Import
