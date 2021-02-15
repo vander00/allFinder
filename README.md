@@ -28,7 +28,7 @@ Poka net
 ### Import
 To import a module into your code use:
 ```
-Poka net
+import finder_in_files as finder
 ```
 ### Usage
 To find a line in files in a directory, use:
