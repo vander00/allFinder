@@ -14,3 +14,5 @@
 - doc
 - docx
 - otd
+- rtf  (May not work on Windows)
+- pdf  (May not work on Windows)

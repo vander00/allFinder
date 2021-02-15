@@ -8,12 +8,12 @@ from colorama import Fore
 class Finder:
     # --- Data ---
     DEFAULT_NAMES_FILES = ["txt", 'log', 'html', 'css', 'cpp', 'h', 'js', 'py', 'c']  # Supported file formats
-    OTHER_NAMES_FILES = ['doc', 'docx', 'odt']
+    OTHER_NAMES_FILES = ['doc', 'docx', 'odt', 'pdf', 'rtf']
 
     def __init__(self):
             self.feeling = True  # Check if text is found
             self.settings_files = {
-                'txt': True,
+                'txt': True, 
                 'log': True,
                 'html': True,
                 'css': True,
