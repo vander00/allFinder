@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(1, "../Bin")
+
 import finder_in_files
 from colorama import Fore  # pip install colorama
 

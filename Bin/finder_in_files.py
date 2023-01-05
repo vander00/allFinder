@@ -2,12 +2,11 @@ import os
 import textract
 from fuzzywuzzy import fuzz
 
-
-DEFAULT_NAMES_FILES = ["txt", 'log', 'html', 'css', 'cpp', 'h', 'js', 'py', 'c']  # Supported file formats
-OTHER_NAMES_FILES = ['doc', 'docx', 'odt', 'pdf', 'rtf']
-
 results = list()
-DEFAULT_SETTINGS_FILES = {
+
+
+class Settings:
+    DEFAULT_SETTINGS_FILES = {
         'txt': True,
         'log': True,
         'html': True,
@@ -21,7 +20,10 @@ DEFAULT_SETTINGS_FILES = {
         'rtf': True,
         'odt': True,
         'pdf': True
-}
+    }
+
+    SIMPLE_EXTENSIONS = ["txt", 'log', 'html', 'css', 'cpp', 'h', 'js', 'py', 'c']  # Supported file formats
+    COMPLICATED_EXTENSIONS = ['doc', 'docx', 'odt', 'pdf', 'rtf']  # Need a library to read
 
 
 def _checker_default(catalog_name, find_str, name_file):
@@ -32,13 +34,14 @@ def _checker_default(catalog_name, find_str, name_file):
 
     with open(catalog_name + "/" + name_file, 'r', encoding='utf-8') as f:  # Opening a file
         for line in f:
-            if fuzz.partial_ratio(find_str, line.lower()) > 88:  # If the lines match more than 89, then the information is displayed
+            # If the line matches more than 88%, the information gets displayed
+            if fuzz.partial_ratio(find_str, line.lower()) > 88:
                 numbers_repeat += 1
                 numbers_str.append(number_str)
                 number_str = 0
             number_str += 1
         if numbers_repeat != 0:
-            return (catalog_name + '/' + name_file, str(numbers_str).replace(",", " |"), numbers_repeat)
+            return catalog_name + '/' + name_file, str(numbers_str).replace(",", " |"), numbers_repeat
 
         return False
 
@@ -51,7 +54,8 @@ def _checker_other(catalog_name, find_str, name_file):
     try:  # File validation check
         f = textract.process(catalog_name + "/" + name_file).decode('utf-8').lower().split('\n')
         for line in f:
-            if fuzz.partial_ratio(find_str, line) > 88:  # If the lines match more than 89, then the information is displayed
+            # If the line matches more than 88%, then the information is displayed
+            if fuzz.partial_ratio(find_str, line) > 88:
                 numbers_repeat += 1
                 numbers_str.append(number_str)
                 number_str = 0
@@ -64,7 +68,9 @@ def _checker_other(catalog_name, find_str, name_file):
         pass
 
 
-def search(catalog_name, find_str, settings_files=DEFAULT_SETTINGS_FILES):  # To find out the directory
+def search(catalog_name, find_str, settings_files=None):  # To find out the directory
+    if settings_files is None:
+        settings_files = Settings.DEFAULT_SETTINGS_FILES
     if not os.path.exists(catalog_name):
         raise FileNotFoundError(f'Directory "{catalog_name}" not found.')
 
@@ -72,12 +78,12 @@ def search(catalog_name, find_str, settings_files=DEFAULT_SETTINGS_FILES):  # To
 
     catalog = os.listdir(catalog_name)
     for name in catalog:
-        if name.split('.')[-1] in DEFAULT_NAMES_FILES:
+        if name.split('.')[-1] in Settings.SIMPLE_EXTENSIONS:
             if settings_files[name.split('.')[-1]]:
                 res = _checker_default(catalog_name, find_str, name)
                 if res:
                     results.append(res)
-        elif name.split('.')[-1] in OTHER_NAMES_FILES:
+        elif name.split('.')[-1] in Settings.COMPLICATED_EXTENSIONS:
             if settings_files[name.split('.')[-1]]:
                 res = _checker_other(catalog_name, find_str, name)
                 if res:
