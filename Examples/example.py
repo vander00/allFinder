@@ -5,12 +5,12 @@ import allFinder
 from colorama import Fore  # pip install colorama
 
 
-class Test:
+class Main:
     def __init__(self):
         self.settings_files = allFinder.DefaultSettings.DEFAULT_SETTINGS_FILES
 
-    def settings(self):  # Configuring which extensions are used
-        for exp in self.settings_files:  # Output to the configuration console.
+    def settings(self):  # Configuring what extensions will be used
+        for exp in self.settings_files:  # Output about the configuration into the terminal
             if exp == "similarity":
                 print("\t{0:9} | {1}".format(Fore.GREEN + exp, Fore.WHITE + str(self.settings_files[exp])))
             else:
@@ -21,8 +21,9 @@ class Test:
 
         print(Fore.WHITE)
 
-        while True:  # Change configuration
-            act = input('\tEnter "back" or "quit" to quit\nThe extension to be changed: ').lower()
+        while True:  # Changing the configuration
+            act = input('\tEnter "back" or "quit" to quit\nYou can add your own extension you need just writing it'
+                        ' here\nThe extension to be changed: ').lower()
 
             if act in self.settings_files:
                 if act == "similarity":
@@ -47,7 +48,7 @@ class Test:
             else:
                 print(Fore.RED + '\nError! You entered the wrong file extension\n' + Fore.WHITE)
 
-    def directory(self):  # To find out the directory
+    def directory(self):  # Searches the desired line in all files in the directory
         while True:
             catalog_name = input('Enter "back" to exit\n\tDirectory path (C:/program): ').lower()
 
@@ -73,7 +74,7 @@ class Test:
 
         while True:
             print("\nTo enter:\n[1] - Start")
-            print("[2] - Setting File extensions")
+            print("[2] - Settings of files extensions")
 
             inlet = input("Enter: ").lower()
 
@@ -86,5 +87,5 @@ class Test:
 
 
 if __name__ == "__main__":  # Start!
-    program = Test()
+    program = Main()
     program.run()

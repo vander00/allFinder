@@ -1,16 +1,6 @@
-# Finder-in-files
+# AllFinder
 **This script searches for a specific string across all files in the directory you specified**
-## Supported file formats for searching
-- txt
-- log
-- html
-- css
-- cpp
-- h
-- js
-- py
-- c
-### Special formats
+## Supported special formats
 - doc
 - docx
 - otd
@@ -21,15 +11,8 @@
 
 ### Installation
 
-```
-Poka net
-```
+You can just download the `allFinder` file and import it in your project.
 
-### Import
-To import a module into your code use:
-```
-import finder_in_files as finder
-```
 ### Usage
 To find a line in files in a directory, use:
 ```
@@ -45,14 +28,6 @@ finder.search(catalog_name, find_str, settings_files=DEFAULT_SETTINGS_FILES)
  
  ```
 DEFAULT_SETTINGS_FILES = {
-        'txt': True,
-        'log': True,
-        'html': True,
-        'css': True,
-        'cpp': True,
-        'h': True,
-        'py': True,
-        'c': True,
         'doc': True,
         'docx': True,
         'rtf': True,
@@ -61,28 +36,31 @@ DEFAULT_SETTINGS_FILES = {
 }
 ```
 The search is performed on the lines of the file. If `find_str` is more than 89% similar to a line in the file, the line is considered found.
+If you want, you can any extension you want just adding the name into the dictionary.
 
-The `search` function returns a tuple (name_file, numbers_str numbers_repeat).
+The `search` function returns a tuple (file_name, str_numbers, repeats_number).
 
-`name_file` - The path to the file where `find_str` was found.
+`file_name` - The path to the file where `desired_str` was found.
 
-`numbers_str` - Returned as a list that consists of the lines where `find_str` was found.
+`str_numbers` - Returned as a list that consists of the lines where `desired_str` was found.
 
-`numbers_repeat` - The number of times to repeat `find_str` in the file. Returned in int format.
+`repeats_number` - The number how many times `desired_str` was repeated in the file. Returned in int format.
 
 ## Example
-An example where all of this is used together.
+An example where everything is used altogether.
 
 ```
 try:
-                results = finder_in_files.search(catalog_name, find_str, self.settings_files)
-                if not results:  # If nothing was found, then
-                    print('\nThe text was not found. ;(\n')
-                else:
-                    for name_file, numbers_str, numbers_repeat in results:  # We unpack the tuple using for.
-                        print(f"\nPath to the file: {name_file}")
-                        print(f'Content lines: {str(numbers_str).replace(",", " |")}')
-                        print(f"String repetitions: {numbers_repeat}\n")
-            except FileNotFoundError:  # print('\nError! You entered an invalid file path.')  
-            # An exception if the path (catalog_name) was not specified correctly.
+    results = allFinder.search(catalog_name, find_str, self.settings_files)
+    if not results:
+        print('\nThe text was not found. ;(\n')
+    else:
+        for name_file, numbers_str, numbers_repeat in results:
+            print(f"\nPath to the file: {name_file}")
+            print(f'Content lines: {str(numbers_str).replace(",", " |")}')
+            print(f"String repetitions: {numbers_repeat}\n")
+except FileNotFoundError 
+    print('\nError! You entered an invalid file path.')  
 ```
+
+If you want a much more full example about the library check `example` folder of the repository.
