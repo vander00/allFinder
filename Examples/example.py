@@ -1,45 +1,46 @@
 import sys
 sys.path.insert(1, "../Bin")
 
-import finder_in_files
+import allFinder
 from colorama import Fore  # pip install colorama
 
 
 class Test:
     def __init__(self):
-        self.settings_files = {
-            'txt': True,
-            'log': True,
-            'html': True,
-            'css': True,
-            'cpp': True,
-            'h': True,
-            'py': True,
-            'c': True,
-            'doc': True,
-            'docx': True,
-            'rtf': True,
-            'odt': True,
-            'pdf': True
-        }
+        self.settings_files = allFinder.DefaultSettings.DEFAULT_SETTINGS_FILES
 
     def settings(self):  # Configuring which extensions are used
         for exp in self.settings_files:  # Output to the configuration console.
-            if self.settings_files[exp]:
-                print("\t{0:9} | ON".format(Fore.GREEN + exp))
+            if exp == "similarity":
+                print("\t{0:9} | {1}".format(Fore.GREEN + exp, Fore.WHITE + str(self.settings_files[exp])))
             else:
-                print("\t{0:9} | OFF".format(Fore.RED + exp))
+                if self.settings_files[exp]:
+                    print("\t{0:9} | ON".format(Fore.GREEN + exp))
+                else:
+                    print("\t{0:9} | OFF".format(Fore.RED + exp))
 
         print(Fore.WHITE)
 
         while True:  # Change configuration
-            act = input('\tEnter "back" or "quit" to quit\nThe extension to be turned off / on: ').lower()
+            act = input('\tEnter "back" or "quit" to quit\nThe extension to be changed: ').lower()
 
             if act in self.settings_files:
-                if self.settings_files[act]:
-                    self.settings_files[act] = False
+                if act == "similarity":
+                    while True:
+                        try:
+                            number_similarity = int(input("Enter a nuber of similarity to change:"))
+                            if 100 < number_similarity < 0:
+                                print("You've entered a wrong number.")
+                        except ValueError:
+                            print("You've entered a wrong value.")
+                        else:
+                            self.settings_files["similarity"] = number_similarity
+                            break
                 else:
-                    self.settings_files[act] = True
+                    if self.settings_files[act]:
+                        self.settings_files[act] = False
+                    else:
+                        self.settings_files[act] = True
                 return
             elif act == "back" or act == "quit":
                 return
@@ -56,7 +57,7 @@ class Test:
             find_str = input("\nText to find: ").lower()
 
             try:
-                results = finder_in_files.search(catalog_name, find_str, self.settings_files)
+                results = allFinder.search(catalog_name, find_str, self.settings_files)
                 if not results:
                     print('\nThe text was not found. ;(\n')
                 else:
